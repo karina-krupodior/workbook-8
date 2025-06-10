@@ -21,7 +21,6 @@ public class Main {
                 double price = results.getDouble("unitPrice");
                 int stock = results.getInt("unitsInStock");
 
-                // Nicely formatted row
                 System.out.printf("%-5d %-30s %-10.2f %-10d%n", id, name, price, stock);
             }
 
