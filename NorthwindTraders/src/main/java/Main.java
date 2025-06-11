@@ -36,9 +36,11 @@ public class Main {
     }
 
     private static void displayCategoriesAndProducts(Scanner scanner) {
-        try (
-                Connection connection = DriverManager.getConnection(url, username, password);
-                Statement statement = connection.createStatement();
+
+            try (
+                Connection conn = DataSourceFactory.getDataSource().getConnection();
+
+                Statement statement = conn.createStatement();
                 ResultSet resultSet = statement.executeQuery("SELECT categoryId, categoryName FROM Categories ORDER BY categoryId")
         ) {
             System.out.println("\nCategories:");
@@ -54,7 +56,7 @@ public class Main {
             String productQuery = "SELECT productId, productName, unitPrice, unitsInStock " +
                     "FROM Products WHERE categoryId = ? ORDER BY productId";
 
-            try (PreparedStatement ps = connection.prepareStatement(productQuery)) {
+            try (PreparedStatement ps = conn.prepareStatement(productQuery)) {
                 ps.setInt(1, selectedCategoryId);
 
                 try (ResultSet products = ps.executeQuery()) {
@@ -77,7 +79,7 @@ public class Main {
 
     private static void displayAllCustomers() {
         try (
-                Connection conn = DriverManager.getConnection(url, username, password);
+                Connection conn = DataSourceFactory.getDataSource().getConnection();
                 PreparedStatement stmt = conn.prepareStatement(
                         "SELECT ContactName, CompanyName, City, Country, Phone FROM Customers ORDER BY Country");
                 ResultSet rs = stmt.executeQuery()
@@ -98,4 +100,6 @@ public class Main {
             e.printStackTrace();
         }
     }
+
 }
+
